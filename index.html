@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>JIKOS Shop Dashboard</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    
+    .container {
+      background: white;
+      border-radius: 24px;
+      padding: 24px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 4px;
+    }
+    
+    .subtitle {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 16px;
+    }
+    
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 6px;
+    }
+    
+    input {
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 16px;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      transition: border-color 0.2s;
+      -webkit-appearance: none;
+    }
+    
+    input:focus {
+      outline: none;
+      border-color: #1a1a2e;
+    }
+    
+    button {
+      width: 100%;
+      padding: 16px;
+      font-size: 16px;
+      font-weight: 600;
+      color: white;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      -webkit-appearance: none;
+      margin-bottom: 12px;
+    }
+    
+    button:active {
+      transform: scale(0.98);
+    }
+    
+    button.secondary {
+      background: transparent;
+      color: #1a1a2e;
+      border: 1.5px solid #1a1a2e;
+    }
+    
+    .card {
+      background: #f8f9ff;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .shop-name {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 12px;
+      word-break: break-word;
+    }
+    
+    .token-balance {
+      font-size: 36px;
+      font-weight: 800;
+      color: #1a1a2e;
+    }
+    
+    .token-label {
+      font-size: 14px;
+      color: #666;
+    }
+    
+    .token-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+    
+    #status {
+      background: #1a1a2e;
+      color: #00ff00;
+      padding: 10px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 12px;
+      margin-bottom: 16px;
+    }
+    
+    .hidden {
+      display: none !important;
+    }
+    
+    .footer-note {
+      text-align: center;
+      font-size: 12px;
+      color: #aaa;
+      margin-top: 16px;
+    }
+    
+    .shop-id-display {
+      font-size: 12px;
+      color: #aaa;
+      margin-top: 8px;
+      word-break: break-all;
+    }
+    
+    .error-message {
+      background: #fee;
+      color: #c00;
+      padding: 12px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      font-size: 14px;
+      display: none;
+    }
+    
+    .success-message {
+      background: #efe;
+      color: #060;
+      padding: 12px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      font-size: 14px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📱 JIKOS</h1>
+    <div class="subtitle">Shop Dashboard</div>
+    
+    <div id="status">⏳ Loading...</div>
+    <div id="errorMsg" class="error-message"></div>
+    <div id="successMsg" class="success-message"></div>
+    
+    <!-- LOGIN SECTION -->
+    <div id="loginSection">
+      <label>Email</label>
+      <input type="email" id="loginEmail" placeholder="shop@example.com" autocomplete="email" inputmode="email" value="masterbiz.int@gmail.com">
+      
+      <label>Password</label>
+      <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
+      
+      <button onclick="handleLogin()">Sign In</button>
+      <button class="secondary" onclick="showSignup()">Create Account</button>
+      
+      <div class="footer-note">
+        Jesus is King! 👑
+      </div>
+    </div>
+    
+    <!-- SIGNUP SECTION -->
+    <div id="signupSection" class="hidden">
+      <label>Shop Name</label>
+      <input type="text" id="signupShop" placeholder="My Shop" maxlength="50">
+      
+      <label>Email</label>
+      <input type="email" id="signupEmail" placeholder="shop@example.com" autocomplete="email" inputmode="email">
+      
+      <label>Password</label>
+      <input type="password" id="signupPassword" placeholder="••••••••" minlength="6">
+      
+      <button onclick="handleSignup()">Sign Up</button>
+      <button class="secondary" onclick="showLogin()">Back to Login</button>
+      
+      <div class="footer-note">
+        Jesus is King! 👑
+      </div>
+    </div>
+    
+    <!-- DASHBOARD SECTION -->
+    <div id="dashboardSection" class="hidden">
+      <div class="card">
+        <div id="shopName" class="shop-name">Loading...</div>
+        <div class="token-row">
+          <span id="tokens" class="token-balance">--</span>
+          <span class="token-label">SMS Tokens</span>
+        </div>
+        <div id="shopIdDisplay" class="shop-id-display"></div>
+      </div>
+      
+      <label>Update Shop Name</label>
+      <input type="text" id="newShopName" placeholder="Enter new shop name" maxlength="50" inputmode="text">
+      <button onclick="updateShop()">Save Shop Name</button>
+      
+      <p style="font-size: 13px; color: #666; margin: 8px 0 16px; padding: 0 4px;">
+        💡 This name will appear in SMS receipts sent to your customers.
+      </p>
+      
+      <button class="secondary" onclick="logout()">Sign Out</button>
+      
+      <div class="footer-note">
+        Jesus is King! 👑
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <script>
+    window.onerror = function(msg, src, line, col, err) {
+      alert("ERROR: " + msg + "\nLine: " + line);
+      return true;
+    };
+    
+    const SUPABASE_URL = 'https://hmsfisqjzgljfhmhsnsp.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhtc2Zpc3FqemdsamZobWhzbnNwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4NzA5MDYsImV4cCI6MjA5MDQ0NjkwNn0.9PvUZkwTEd2ozXQRFlY6qgN3P__y1RqfnUWjVfujPoU';
+    
+    let supabase;
+    let currentShopId = null;
+    
+    const statusEl = document.getElementById('status');
+    const loginSection = document.getElementById('loginSection');
+    const signupSection = document.getElementById('signupSection');
+    const dashboardSection = document.getElementById('dashboardSection');
+    const errorMsg = document.getElementById('errorMsg');
+    const successMsg = document.getElementById('successMsg');
+    
+    function log(msg) {
+      statusEl.textContent = msg;
+      console.log(msg);
+    }
+    
+    function showError(msg) {
+      errorMsg.textContent = msg;
+      errorMsg.style.display = 'block';
+      successMsg.style.display = 'none';
+      setTimeout(function() { errorMsg.style.display = 'none'; }, 4000);
+    }
+    
+    function showSuccess(msg) {
+      successMsg.textContent = msg;
+      successMsg.style.display = 'block';
+      errorMsg.style.display = 'none';
+      setTimeout(function() { successMsg.style.display = 'none'; }, 3000);
+    }
+    
+    window.showSignup = function() {
+      log('Show signup form');
+      loginSection.classList.add('hidden');
+      signupSection.classList.remove('hidden');
+      dashboardSection.classList.add('hidden');
+    };
+    
+    window.showLogin = function() {
+      log('Show login form');
+      signupSection.classList.add('hidden');
+      dashboardSection.classList.add('hidden');
+      loginSection.classList.remove('hidden');
+    };
+    
+    async function loadDashboard() {
+      log('Loading shop data...');
+      
+      try {
+        var userResult = await supabase.auth.getUser();
+        if (userResult.error) throw userResult.error;
+        if (!userResult.data.user) {
+          showLogin();
+          return;
+        }
+        
+        log('User: ' + userResult.data.user.email);
+        
+        var shopResult = await supabase
+          .from('shop_settings')
+          .select('shop_id, shop_name')
+          .eq('user_id', userResult.data.user.id)
+          .maybeSingle();
+        
+        if (shopResult.error) throw shopResult.error;
+        
+        if (!shopResult.data) {
+          document.getElementById('shopName').textContent = 'No shop linked';
+          document.getElementById('tokens').textContent = '--';
+          document.getElementById('shopIdDisplay').textContent = 'Contact support to link your shop.';
+          log('No shop linked');
+          
+          loginSection.classList.add('hidden');
+          signupSection.classList.add('hidden');
+          dashboardSection.classList.remove('hidden');
+          return;
+        }
+        
+        currentShopId = shopResult.data.shop_id;
+        
+        var walletResult = await supabase
+          .from('wallets')
+          .select('token_balance')
+          .eq('shop_id', currentShopId)
+          .maybeSingle();
+        
+        if (walletResult.error) throw walletResult.error;
+        
+        document.getElementById('shopName').textContent = shopResult.data.shop_name || 'My Shop';
+        document.getElementById('tokens').textContent = walletResult.data ? walletResult.data.token_balance : 0;
+        document.getElementById('shopIdDisplay').textContent = 'Shop ID: ' + currentShopId.slice(0, 8) + '...';
+        document.getElementById('newShopName').value = shopResult.data.shop_name || '';
+        
+        loginSection.classList.add('hidden');
+        signupSection.classList.add('hidden');
+        dashboardSection.classList.remove('hidden');
+        
+        log('Dashboard ready!');
+        
+      } catch (error) {
+        log('Error: ' + error.message);
+        showError('Failed to load shop data');
+      }
+    }
+    
+    window.handleLogin = async function() {
+      var email = document.getElementById('loginEmail').value.trim();
+      var password = document.getElementById('loginPassword').value;
+      
+      log('Login: ' + email);
+      
+      if (!email || !password) {
+        showError('Please enter both email and password');
+        return;
+      }
+      
+      try {
+        var result = await supabase.auth.signInWithPassword({ email: email, password: password });
+        
+        if (result.error) throw result.error;
+        
+        log('Login successful!');
+        showSuccess('Signed in successfully!');
+        
+      } catch (error) {
+        log('Error: ' + error.message);
+        showError(error.message || 'Login failed');
+      }
+    };
+    
+    window.handleSignup = async function() {
+      var shopName = document.getElementById('signupShop').value.trim();
+      var email = document.getElementById('signupEmail').value.trim();
+      var password = document.getElementById('signupPassword').value;
+      
+      log('Signup: ' + email);
+      
+      if (!shopName || !email || !password) {
+        showError('Please fill in all fields');
+        return;
+      }
+      
+      if (password.length < 6) {
+        showError('Password must be at least 6 characters');
+        return;
+      }
+      
+      try {
+        var authResult = await supabase.auth.signUp({
+          email: email,
+          password: password
+        });
+        
+        if (authResult.error) throw authResult.error;
+        
+        if (!authResult.data.user) {
+          throw new Error('User creation failed');
+        }
+        
+        log('User created: ' + authResult.data.user.id);
+        
+        var userId = authResult.data.user.id;
+        
+        var shopResult = await supabase
+          .from('shop_settings')
+          .insert({
+            shop_id: userId,
+            shop_name: shopName,
+            user_id: userId,
+            updated_at: new Date()
+          })
+          .select()
+          .single();
+        
+        if (shopResult.error) throw shopResult.error;
+        
+        log('Shop created: ' + shopName);
+        
+        var walletResult = await supabase
+          .from('wallets')
+          .insert({
+            shop_id: userId,
+            token_balance: 10,
+            created_at: new Date(),
+            updated_at: new Date()
+          });
+        
+        if (walletResult.error) {
+          log('Wallet error: ' + walletResult.error.message);
+        } else {
+          log('Wallet created with 10 tokens');
+        }
+        
+        showSuccess('Account created! You can now sign in.');
+        
+        document.getElementById('signupShop').value = '';
+        document.getElementById('signupEmail').value = '';
+        document.getElementById('signupPassword').value = '';
+        
+        document.getElementById('loginEmail').value = email;
+        
+        setTimeout(function() {
+          showLogin();
+        }, 1500);
+        
+      } catch (error) {
+        log('Error: ' + error.message);
+        showError(error.message || 'Signup failed');
+      }
+    };
+    
+    window.updateShop = async function() {
+      var newName = document.getElementById('newShopName').value.trim();
+      
+      if (!newName) {
+        showError('Shop name cannot be empty');
+        return;
+      }
+      
+      if (!currentShopId) {
+        showError('No shop linked to this account');
+        return;
+      }
+      
+      log('Updating shop name...');
+      
+      try {
+        var result = await supabase
+          .from('shop_settings')
+          .update({ 
+            shop_name: newName,
+            updated_at: new Date()
+          })
+          .eq('shop_id', currentShopId);
+        
+        if (result.error) throw result.error;
+        
+        document.getElementById('shopName').textContent = newName;
+        showSuccess('Shop name updated!');
+        log('Shop name updated');
+        
+      } catch (error) {
+        log('Error: ' + error.message);
+        showError('Failed to update shop name');
+      }
+    };
+    
+    window.logout = async function() {
+      log('Logging out...');
+      
+      try {
+        await supabase.auth.signOut();
+        document.getElementById('loginPassword').value = '';
+        showSuccess('Signed out successfully');
+        
+      } catch (error) {
+        showError('Failed to sign out');
+      }
+    };
+    
+    function init() {
+      if (typeof window.supabase !== 'undefined') {
+        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        log('Supabase client created');
+        
+        supabase.auth.onAuthStateChange(function(event, session) {
+          log('Auth state: ' + event);
+          
+          if (session && session.user) {
+            log('User session active');
+            loadDashboard();
+          } else {
+            log('No session');
+            loginSection.classList.remove('hidden');
+            signupSection.classList.add('hidden');
+            dashboardSection.classList.add('hidden');
+          }
+        });
+        
+        log('Ready');
+      } else {
+        log('Loading Supabase...');
+        setTimeout(init, 100);
+      }
+    }
+    
+    init();
+  </script>
+</body>
+</html>
